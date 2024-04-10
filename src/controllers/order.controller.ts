@@ -30,7 +30,7 @@ export class OrderController {
   }
 
   @Get('/')
-  public async getOrderById(@Query() query: ListOrdersQuery) {
+  public async listOrders(@Query() query: ListOrdersQuery) {
     return await this.listOrdersService.execute(query);
   }
 }

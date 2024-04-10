@@ -11,6 +11,7 @@ import { Order } from './entities/order.entity';
 import { DataSeedService } from './services/orders/data-seed.service';
 import { ListOrdersService } from './services/orders/list-orders.service';
 import { ProductHistoric } from './entities/product-historic.entity';
+import { BuildOrderResponse } from './utils/build-order-response.util';
 
 @Module({
   imports: [
@@ -19,7 +20,6 @@ import { ProductHistoric } from './entities/product-historic.entity';
       database: 'db.sqlite',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
-      // logging: true,
     }),
     TypeOrmModule.forFeature([User, Order, ProductHistoric]),
   ],
@@ -34,6 +34,7 @@ import { ProductHistoric } from './entities/product-historic.entity';
     BuildDataStructureService,
     DataSeedService,
     ListOrdersService,
+    BuildOrderResponse,
   ],
 })
 export class AppModule {}

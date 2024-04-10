@@ -9,7 +9,7 @@ const multerConfig = {
     filename: (req, file, cb) => {
       if (path.extname(file.originalname).toLowerCase() !== '.txt') {
         const err = new HttpException(
-          'Apenas arquivos .txt são permitidos',
+          'Only .txt files are allowed',
           HttpStatus.BAD_REQUEST,
         );
         return cb(err, '');

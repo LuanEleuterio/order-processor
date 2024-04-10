@@ -17,7 +17,7 @@ interface OrderProps {
   name: string;
 }
 
-export class OrderDTO {
+export class OrderResponse {
   private user_id: number;
   private name: string;
   private orders?: Order[];
