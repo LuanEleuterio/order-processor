@@ -8,12 +8,14 @@ import { GenericException } from 'src/errors/generic-error.error';
 @Injectable()
 export class NormalizeOrderFileService {
   public async execute(file: Express.Multer.File): Promise<NormalizeOrder[]> {
-    const normalizedData = await this.readFile(file);
+    const normalizedData = await this.readFileLines(file);
     return normalizedData;
   }
 
-  private async readFile(file: Express.Multer.File): Promise<NormalizeOrder[]> {
-    return new Promise((resolve, reject) => {
+  private async readFileLines(
+    file: Express.Multer.File,
+  ): Promise<NormalizeOrder[]> {
+    return new Promise((resolve) => {
       const orders: NormalizeOrder[] = [];
       const fileToRead = readline.createInterface({
         input: createReadStream(file.path),

@@ -40,7 +40,6 @@ export class Order {
 
   constructor(props: Props) {
     Object.assign(this, props);
-    this.total = '0.00';
   }
 
   public calculateTotal(value: number) {

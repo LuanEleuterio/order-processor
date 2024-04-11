@@ -25,9 +25,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = exception.message;
     }
 
-    // Faça o que desejar com a exceção aqui, como registrar em um serviço de log
-    console.error(exception);
-
     response.status(status).json({
       timestamp: new Date().toISOString(),
       path: request.url,
