@@ -9,7 +9,7 @@ export class BuildOrderStructureService implements IBuildOrderStructureService {
   ): IBuildOrderStructureService.Execute.Result[] {
     const response: {
       [key: number]: IBuildOrderStructureService.Execute.Result;
-    }[] = [];
+    } = {};
 
     for (const item of data) {
       if (!response[item.userId]) {
@@ -77,8 +77,8 @@ export class BuildOrderStructureService implements IBuildOrderStructureService {
     return (Number(total) + Number(value)).toFixed(2);
   }
 
-  private formatDate(date: string): string {
+  private formatDate(date: string): Date {
     const parseDate = parseISO(date);
-    return format(parseDate, 'yyyy-MM-dd');
+    return new Date(format(parseDate, 'yyyy-MM-dd'));
   }
 }

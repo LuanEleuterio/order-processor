@@ -10,7 +10,7 @@ export namespace ICreateOrderService {
   export namespace Execute {
     export type Params = {
       order_id: number;
-      date: string;
+      date: Date;
       user_id: Types.ObjectId;
       total: string;
       products: {
@@ -21,8 +21,8 @@ export namespace ICreateOrderService {
     export type Result = {
       _id: Types.ObjectId;
       order_id: number;
-      date: string;
-      user_id: string;
+      date: Date;
+      user_id: Types.ObjectId;
       total: string;
       products: {
         product_id: number;

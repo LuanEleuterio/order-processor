@@ -13,7 +13,7 @@ export namespace IOrderService {
   export namespace Create {
     export type Params = {
       order_id: number;
-      date: string;
+      date: Date;
       user_id: Types.ObjectId;
       total: string;
       products: {
@@ -34,7 +34,7 @@ export namespace IOrderService {
       name: string;
       orders: {
         order_id: number;
-        date: string;
+        date: Date;
         total: string;
         products: {
           product_id: number;

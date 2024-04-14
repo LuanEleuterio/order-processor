@@ -8,6 +8,8 @@ import { IExtractLinesFromOrderFileService } from './services/extract-lines-from
 import { ProcessOrderFileService } from './services/process-order-file.service';
 import { BuildOrderStructureService } from './services/build-order-structure.service';
 import { IBuildOrderStructureService } from './services/build-order-structure.interface';
+import { IListOrdersService } from './services/list-orders.interface';
+import { ListOrdersService } from './services/list-orders.service';
 
 export const OrderProvider = [
   { provide: IOrderRepository, useClass: OrderRepository },
@@ -20,5 +22,9 @@ export const OrderProvider = [
   {
     provide: IBuildOrderStructureService,
     useClass: BuildOrderStructureService,
+  },
+  {
+    provide: IListOrdersService,
+    useClass: ListOrdersService,
   },
 ];

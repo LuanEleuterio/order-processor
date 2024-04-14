@@ -23,7 +23,7 @@ export namespace IBuildOrderStructureService {
       name: string;
       orders: {
         order_id: number;
-        date: string;
+        date: Date;
         total: string;
         products: {
           product_id: number;

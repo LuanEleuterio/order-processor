@@ -18,29 +18,44 @@ export class OrderRepository implements IOrderRepository {
     return createdOrder;
   }
 
-  // public async list(
-  //   query: IOrderRepository.List.Params,
-  // ): Promise<IOrderRepository.List.Result[]> {
-  //   const orders = await this.orderModel
-  //     .find({
-  //       order_id: query.order_id,
-  //       date: {
-  //         $gte: query.start_date,
-  //         $lte: query.end_date,
-  //       },
-  //     })
-  //     .populate('products', 'user_id');
+  public async list(
+    query: IOrderRepository.List.Params,
+  ): Promise<IOrderRepository.List.Result[]> {
+    const where: Record<string, string | number | any> = {};
 
-  //   return orders.map((order) => ({
-  //     user_id: order.user_id,
-  //     name: '',
-  //     order_id: order.order_id,
-  //     date: order.date,
-  //     total: order.total,
-  //     products: order.products.map((product) => ({
-  //       product_id: product.product_id,
-  //       value: product.value,
-  //     })),
-  //   }));
-  // }
+    if (query.order_id) {
+      where.order_id = query.order_id;
+    }
+
+    if (query.start_date || query.end_date) {
+      where.date = {
+        ...(query.start_date ? { $gte: new Date(query.start_date) } : {}),
+        ...(query.end_date ? { $lte: new Date(query.end_date) } : {}),
+      };
+    }
+
+    const orders = await this.orderModel
+      .find()
+      .where(where)
+      .populate({
+        path: 'user_id',
+        select: '-_id -__v -createdAt -updatedAt',
+      })
+      .lean();
+
+    return orders.map((order) => {
+      const user = order.user_id as unknown as {
+        user_id: number;
+        name: string;
+      };
+
+      return {
+        order_id: order.order_id,
+        date: order.date,
+        total: order.total,
+        products: order.products,
+        user,
+      };
+    });
+  }
 }
