@@ -1,27 +1,30 @@
 import { Module } from '@nestjs/common';
-import { OrderController } from './controllers/order.controller';
-import { ProcessOrderFileService } from './services/orders/process-order-file.service';
-import { AllExceptionsFilter } from './errors/all-exceptions.filter';
+import { MongooseModule } from '@nestjs/mongoose';
 import { APP_FILTER } from '@nestjs/core';
-import { NormalizeOrderFileService } from './services/orders/normalize-order-file.service';
-import { BuildDataStructureService } from './services/orders/build-data-structure.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Order } from './entities/order.entity';
-import { DataSeedService } from './services/orders/data-seed.service';
-import { ListOrdersService } from './services/orders/list-orders.service';
-import { ProductHistoric } from './entities/product-historic.entity';
-import { BuildOrderResponse } from './utils/build-order-response.util';
+import { OrderController } from './orders/controller/order.controller';
+import { AllExceptionsFilter } from './errors/all-exceptions.filter';
+import { Order, OrderSchema } from './orders/entities/order.entity';
+import { OrderProvider } from './orders/order.provider';
+import { User, UserSchema } from './users/entities/user.entity';
+import { UsersProvider } from './users/users.provider';
+import { ProductsHistoricProvider } from './products-historic/products-historic.provider';
+import {
+  ProductHistoric,
+  ProductHistoricSchema,
+} from './entities/product-historic.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
     }),
-    TypeOrmModule.forFeature([User, Order, ProductHistoric]),
+    MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forFeature([
+      { name: Order.name, schema: OrderSchema },
+      { name: User.name, schema: UserSchema },
+      { name: ProductHistoric.name, schema: ProductHistoricSchema },
+    ]),
   ],
   controllers: [OrderController],
   providers: [
@@ -29,12 +32,9 @@ import { BuildOrderResponse } from './utils/build-order-response.util';
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
-    ProcessOrderFileService,
-    NormalizeOrderFileService,
-    BuildDataStructureService,
-    DataSeedService,
-    ListOrdersService,
-    BuildOrderResponse,
+    ...UsersProvider,
+    ...OrderProvider,
+    ...ProductsHistoricProvider,
   ],
 })
 export class AppModule {}

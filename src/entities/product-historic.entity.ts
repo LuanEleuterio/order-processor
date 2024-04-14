@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Order } from './order.entity';
+import { Order } from '../orders/entities/order.entity';
+import { SchemaFactory } from '@nestjs/mongoose';
 
 @Entity()
 export class ProductHistoric {
@@ -29,3 +30,6 @@ export class ProductHistoric {
     Object.assign(this, props);
   }
 }
+
+export const ProductHistoricSchema =
+  SchemaFactory.createForClass(ProductHistoric);

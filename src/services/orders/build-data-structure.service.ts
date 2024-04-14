@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { NormalizeOrder } from 'src/dtos/normalized-order.dto';
-import { Order } from 'src/entities/order.entity';
+import { Order } from 'src/orders/entities/order.entity';
 import { ProductHistoric } from 'src/entities/product-historic.entity';
-import { User } from 'src/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class BuildDataStructureService {
@@ -24,7 +24,7 @@ export class BuildDataStructureService {
 
       if (!users[item.userId]) {
         users[item.userId] = new User({
-          id: Number(item.userId),
+          user_id: Number(item.userId),
           name: item.name,
         });
       }
