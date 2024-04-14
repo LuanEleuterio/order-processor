@@ -3,7 +3,6 @@ import { EmptyFileException } from '../../errors/empty-file.error';
 import { eraseFile } from 'src/utils/erase-file.util';
 import { IProcessOrderFileService } from './process-order-file.interface';
 import { ICreateOrderService } from './create-order.interface';
-import { IProductsHistoricService } from 'src/products-historic/services/products-historic.interface';
 import { IUserService } from 'src/users/services/user.interface';
 import { IExtractLinesFromOrderFileService } from './extract-lines-from-order-file.interface';
 import { IBuildOrderStructureService } from './build-order-structure.interface';
@@ -15,8 +14,6 @@ export class ProcessOrderFileService implements IProcessOrderFileService {
     private readonly createOrderService: ICreateOrderService,
     @Inject(IUserService)
     private readonly userService: IUserService,
-    @Inject(IProductsHistoricService)
-    private readonly productHistoricService: IProductsHistoricService,
     @Inject(IExtractLinesFromOrderFileService)
     private readonly extractLinesFromOrderFileService: IExtractLinesFromOrderFileService,
     @Inject(IBuildOrderStructureService)
@@ -34,10 +31,23 @@ export class ProcessOrderFileService implements IProcessOrderFileService {
     const extractedLines =
       await this.extractLinesFromOrderFileService.execute(params);
 
-    const builtStructure =
+    const orderStructure =
       this.buildOrderStructureService.execute(extractedLines);
 
-    console.log(builtStructure);
+    for (const order of orderStructure) {
+      const user = await this.userService.create({
+        user_id: order.user_id,
+        name: order.name,
+      });
+
+      for (const orderData of order.orders) {
+        await this.createOrderService.execute({
+          ...orderData,
+          user_id: user._id,
+          products: orderData.products,
+        });
+      }
+    }
 
     return { message: 'File has been processed' };
   }

@@ -15,7 +15,7 @@ export class OrderService implements IOrderService {
   }
 
   public async list(query: IOrderService.List.Params): Promise<any> {
-    const orders = await this.orderRepository.list(query);
-    return orders;
+    // const orders = await this.orderRepository.list(query);
+    return [];
   }
 }

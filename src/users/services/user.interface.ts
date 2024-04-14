@@ -15,7 +15,7 @@ export namespace IUserService {
       name: string;
     };
     export type Result = {
-      _id: string | Types.ObjectId;
+      _id: Types.ObjectId;
       user_id: number;
       name: string;
     };

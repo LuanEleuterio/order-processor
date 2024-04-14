@@ -18,18 +18,16 @@ export namespace IUserRepository {
       name: string;
     };
     export type Result = {
-      _id: string | Types.ObjectId;
+      _id: Types.ObjectId;
       user_id: number;
       name: string;
     };
   }
 
   export namespace FindByUserId {
-    export type Params = {
-      user_id: number;
-    };
+    export type Params = number;
     export type Result = {
-      _id: string | Types.ObjectId;
+      _id: Types.ObjectId;
       user_id: number;
       name: string;
     };

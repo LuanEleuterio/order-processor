@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { format, parseISO } from 'date-fns';
 import { IBuildOrderStructureService } from './build-order-structure.interface';
@@ -33,13 +32,45 @@ export class BuildOrderStructureService implements IBuildOrderStructureService {
 
         response[item.userId] = {
           ...user,
-          orders: [order],
+          ...{ orders: [order] },
         };
+
+        continue;
       }
-      const t = response[item.userId];
+
+      const orders = response[item.userId]['orders'];
+      const orderIndex = orders.findIndex(
+        (order) => order.order_id === item.orderId,
+      );
+
+      const product = {
+        product_id: item.productId,
+        value: item.productPrice,
+      };
+
+      if (orderIndex === -1) {
+        const order = {
+          order_id: item.orderId,
+          date: this.formatDate(item.date),
+          total: this.calculateTotal('0.00', product.value),
+          products: [product],
+        };
+
+        response[item.userId]['orders'].push(order);
+        continue;
+      }
+
+      response[item.userId]['orders'][orderIndex]['products'].push(product);
+      response[item.userId]['orders'][orderIndex]['total'] =
+        this.calculateTotal(
+          response[item.userId]['orders'][orderIndex]['total'],
+          product.value,
+        );
     }
 
-    return [];
+    return Object.values(
+      response,
+    ) as IBuildOrderStructureService.Execute.Result[];
   }
 
   private calculateTotal(total: string, value: string): string {

@@ -21,6 +21,6 @@ export class UserRepository implements IUserRepository {
   public async findByUserId(
     user_id: IUserRepository.FindByUserId.Params,
   ): Promise<IUserRepository.FindByUserId.Result> {
-    return this.userModel.findOne({ user_id });
+    return await this.userModel.findOne({ user_id });
   }
 }

@@ -7,13 +7,13 @@ interface Props {
   order_id: number;
   date: string;
   user_id: number;
-  total?: string;
+  total: string;
   products?: string[];
 }
 
-class ProductsRef {
+class Products {
   @Prop()
-  product_id: string;
+  product_id: number;
 
   @Prop()
   value: string;
@@ -25,13 +25,13 @@ export class Order {
   order_id: number;
 
   @Prop({ required: true, default: '0.00' })
-  total?: string;
+  total: string;
 
-  @Prop({ required: true })
-  date?: string;
+  @Prop({ required: true, default: '0001-01-01' })
+  date: string;
 
-  @Prop({ ref: 'ProductHistoric', default: [] })
-  products?: string[] | ProductsRef[];
+  @Prop({ items: Products, default: [] })
+  products: Products[];
 
   @Prop({ ref: 'Users' })
   user_id: string;
@@ -49,17 +49,6 @@ export class Order {
   public formatDate() {
     const parseDate = parseISO(this.date);
     this.date = format(parseDate, 'yyyy-MM-dd');
-  }
-
-  set setProducts(productId: string) {
-    if (!this.products) {
-      this.products = [];
-    }
-    this.products = [...this.products, productId] as unknown as string[];
-  }
-
-  get getProducts() {
-    return this.products;
   }
 }
 

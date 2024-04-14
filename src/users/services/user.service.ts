@@ -12,9 +12,9 @@ export class UserService implements IUserService {
   public async create(
     user: IUserService.Create.Params,
   ): Promise<IUserService.Create.Result> {
-    const userAlreadyExists = await this.userRepository.findByUserId({
-      user_id: user.user_id,
-    });
+    const userAlreadyExists = await this.userRepository.findByUserId(
+      user.user_id,
+    );
 
     if (userAlreadyExists) {
       return userAlreadyExists;

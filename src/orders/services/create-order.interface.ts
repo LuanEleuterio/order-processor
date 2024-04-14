@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export interface ICreateOrderService {
   execute: (
     order: ICreateOrderService.Execute.Params,
@@ -9,11 +11,24 @@ export namespace ICreateOrderService {
     export type Params = {
       order_id: number;
       date: string;
+      user_id: Types.ObjectId;
+      total: string;
+      products: {
+        product_id: number;
+        value: string;
+      }[];
+    };
+    export type Result = {
+      _id: Types.ObjectId;
+      order_id: number;
+      date: string;
       user_id: string;
       total: string;
-      products: string[];
+      products: {
+        product_id: number;
+        value: string;
+      }[];
     };
-    export type Result = void;
   }
 }
 
