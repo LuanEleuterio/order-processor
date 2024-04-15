@@ -2,7 +2,16 @@
 
 API para processamento de pedidos em flat positional txt
 
-## Documentacao
+# Índice
+
+- [Documentação](#documentação)
+- [MongoDB](#mongodb)
+- [Desenho API](#desenho-api)
+- [Iniciar Aplicação](#iniciar-aplicação)
+- [Endpoints](#endpoints)
+
+
+## Documentação
 
 ### Arquitetura Package by Feature e MVCS
 
@@ -29,7 +38,7 @@ Toda comunicação com os services e repositories acontecem por meio de interfac
 #### Depency Inversion
 Todos as classes do repositorio que dependem de outras classes recebem estas em seus construtores afim de aplicar o principio de inversão
 
-### MongoDB
+## MongoDB
 A adoção do MongoDB foi pensada para buscar a simplicidade para lidar com os pedidos, tendo em vista que os arquivos .txt de pedidos contem produtos de mesmo ID com preços diferentes, podendo ser interpretado como um historico de pedidos e produtos
 
 #### Estrutura Pedidos e Usuarios
@@ -59,7 +68,15 @@ Usuario
 }
 ```
 
-### Iniciar aplicação
+## Desenho API
+
+#### /order/file/upload
+![Order File Upload](https://i.imgur.com/2Jo8mLg.png)
+
+#### /orders
+![List Orders](https://i.imgur.com/lOZQQBE.png)
+
+## Iniciar aplicação
 
 Necessario:
 - docker
@@ -75,8 +92,7 @@ Testes
 yarn test:cov
 ```
 
-### Endpoints
-
+## Endpoints
 
 #### Upload do arquivo .txt
 ```http
@@ -152,8 +168,5 @@ GET /orders?order_id=&start_date=&end_date=
     }
 ]
 ```
-#### Exceptions
-| HTTP Code | Mensagem     | Descrição                       |
-| :-------- | :------- | :-------------------------------- |
-| `400`      | `Bad Request` | Only .txt files are allowed |
-| `400`      | `Bad Request` | Empty file |
+#### Observacao
+Quando não é encontrado nenhum registro, é devolvido um array vazio ([])
