@@ -12,7 +12,7 @@ export class CreateOrderService implements ICreateOrderService {
   public async execute(
     order: ICreateOrderService.Execute.Params,
   ): Promise<ICreateOrderService.Execute.Result> {
-    await this.orderRepository.create(order);
-    return;
+    const createdOrder = await this.orderRepository.create(order);
+    return createdOrder;
   }
 }

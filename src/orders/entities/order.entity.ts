@@ -47,6 +47,10 @@ export class Order {
     Object.assign(this, props);
     this.total = '0.00';
   }
+
+  public static create(data: Props) {
+    return new Order(data);
+  }
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

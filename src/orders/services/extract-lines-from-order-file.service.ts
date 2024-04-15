@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import * as readline from 'readline';
-import { eraseFile } from 'src/utils/erase-file.util';
-import { GenericException } from 'src/errors/generic-error.error';
+import { eraseFile } from './../../utils/erase-file.util';
+import { GenericException } from './../../errors/generic-error.error';
 import { IExtractLinesFromOrderFileService } from './extract-lines-from-order-file.interface';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ExtractLinesFromOrderFileService
   }: IExtractLinesFromOrderFileService.Execute.Params): Promise<
     IExtractLinesFromOrderFileService.Execute.Result[]
   > {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const orders: IExtractLinesFromOrderFileService.Execute.Result[] = [];
       const fileToRead = readline.createInterface({
         input: createReadStream(file.path),
@@ -38,17 +38,19 @@ export class ExtractLinesFromOrderFileService
         });
       });
 
-      fileToRead.on('close', () => {
-        eraseFile(file.path);
+      fileToRead.on('close', async () => {
+        await eraseFile(file.path);
         resolve(orders);
       });
 
-      fileToRead.on('error', (error) => {
-        eraseFile(file.path);
-        throw new GenericException({
-          message: 'Error while reading file. Try again.',
-          error,
-        });
+      fileToRead.on('error', async (error) => {
+        await eraseFile(file.path);
+        reject(
+          new GenericException({
+            message: 'Error to read file. Try again.',
+            error,
+          }),
+        );
       });
     });
   }

@@ -10,7 +10,7 @@ export class ListOrdersService implements IListOrdersService {
   ) {}
 
   public async execute(
-    query: IListOrdersService.Execute.Params,
+    query?: IListOrdersService.Execute.Params,
   ): Promise<IListOrdersService.Execute.Result[]> {
     const orders = await this.orderRepository.list(query);
     const response: {

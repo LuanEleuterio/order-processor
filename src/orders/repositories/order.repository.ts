@@ -37,9 +37,9 @@ export namespace IOrderRepository {
   }
   export namespace List {
     export type Params = {
-      order_id: number;
-      start_date: string;
-      end_date: string;
+      order_id?: number;
+      start_date?: string;
+      end_date?: string;
     };
     export type Result = {
       order_id: number;

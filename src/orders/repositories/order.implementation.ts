@@ -23,11 +23,11 @@ export class OrderRepository implements IOrderRepository {
   ): Promise<IOrderRepository.List.Result[]> {
     const where: Record<string, string | number | any> = {};
 
-    if (query.order_id) {
+    if (query?.order_id) {
       where.order_id = query.order_id;
     }
 
-    if (query.start_date || query.end_date) {
+    if (query?.start_date || query?.end_date) {
       where.date = {
         ...(query.start_date ? { $gte: new Date(query.start_date) } : {}),
         ...(query.end_date ? { $lte: new Date(query.end_date) } : {}),

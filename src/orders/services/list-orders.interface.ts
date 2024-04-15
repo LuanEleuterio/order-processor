@@ -9,9 +9,9 @@ export const IListOrdersService = Symbol('IListOrdersService');
 export namespace IListOrdersService {
   export namespace Execute {
     export type Params = {
-      order_id: number;
-      start_date: string;
-      end_date: string;
+      order_id?: number;
+      start_date?: string;
+      end_date?: string;
     };
 
     export type Result = {

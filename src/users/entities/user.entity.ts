@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -15,8 +16,14 @@ export class User {
   @Prop({ required: true })
   name: string;
 
-  constructor(props: User) {
+  _id: Types.ObjectId;
+
+  constructor(props: UserProps) {
     Object.assign(this, props);
+  }
+
+  public static create(data: UserProps) {
+    return new User(data);
   }
 }
 
