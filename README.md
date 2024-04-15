@@ -36,7 +36,7 @@ Cada service de cada package assumiu unicamento uma responsabilidade, seja para 
 Toda comunicação com os services e repositories acontecem por meio de interfaces estabelecidas como contrato. Fugindo assim da implementação do service, e dependendo somente de interfaces.
 
 #### Depency Inversion
-Todos as classes do repositorio que dependem de outras classes recebem estas em seus construtores afim de aplicar o principio de inversão
+Todos as classes que dependem de outras classes recebem estas em seus construtores afim de aplicar o principio de inversão
 
 ## MongoDB
 A adoção do MongoDB foi pensada para buscar a simplicidade para lidar com os pedidos, tendo em vista que os arquivos .txt de pedidos contem produtos de mesmo ID com preços diferentes, podendo ser interpretado como um historico de pedidos e produtos
@@ -168,5 +168,5 @@ GET /orders?order_id=&start_date=&end_date=
     }
 ]
 ```
-#### Observacao
+#### Observação
 Quando não é encontrado nenhum registro, é devolvido um array vazio ([])
