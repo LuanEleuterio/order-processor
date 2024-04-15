@@ -11,6 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import multerConfig from '../../config/multer.config';
 import { IProcessOrderFileService } from '../services/process-order-file.interface';
 import { IListOrdersService } from '../services/list-orders.interface';
+import { ListOrderQueryDTO } from '../dtos/list-order-query.dto';
 
 @Controller('/orders')
 export class OrderController {
@@ -32,9 +33,7 @@ export class OrderController {
   }
 
   @Get()
-  public async listOrders(
-    @Query() query: { order_id: number; start_date: string; end_date: string },
-  ) {
+  public async listOrders(@Query() query: ListOrderQueryDTO) {
     const orders = await this.listOrdersService.execute(query);
     return orders;
   }

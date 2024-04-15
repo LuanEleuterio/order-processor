@@ -3,7 +3,7 @@ import { EmptyFileException } from '../../errors/empty-file.error';
 import { eraseFile } from '../../utils/erase-file.util';
 import { IProcessOrderFileService } from './process-order-file.interface';
 import { ICreateOrderService } from './create-order.interface';
-import { IUserService } from '../../../src/users/services/user.interface';
+import { IUserService } from '../../users/services/user.interface';
 import { IExtractLinesFromOrderFileService } from './extract-lines-from-order-file.interface';
 import { IBuildOrderStructureService } from './build-order-structure.interface';
 
