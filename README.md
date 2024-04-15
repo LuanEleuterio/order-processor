@@ -1,73 +1,159 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Order Processor
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API para processamento de pedidos em flat positional txt
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Documentacao
 
-## Description
+### Arquitetura Package by Feature e MVCS
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Utilizei a arquitetura [Package by Feature](https://medium.com/@vitorbritto/the-package-by-feature-approach-c62a197a8a3d) com MVCS para separar de forma independente e clara cada parte do meu sistema (Pedidos e usuarios) em packages com o uso do MVCS. A adoção dessa forma foi decidida para trazer simplicidade e coesão para cada package e menos aclopamento entre ambos.
 
-## Installation
+Em cada package, conta com controllers, entities (model), repositories e services. Estabelecendo um fluxo de [MVCS](https://quantiphi.com/an-introduction-to-mvcs-architecture/)
 
+![image](https://i.imgur.com/VVgZ5Ta.png)
+
+### SOLID
+
+Os principais principios contidos neste repositorio sao:
+
+- Single Responsability
+- Interface Segregation
+- Depency Inversion
+
+#### Single Responsability
+Cada service de cada package assumiu unicamento uma responsabilidade, seja para abrir o arquivo txt e processar linha por linha, seja para montar a estrututura para salvar no banco ou para listar os pedidos.
+
+#### Interface Segregation
+Toda comunicação com os services e repositories acontecem por meio de interfaces estabelecidas como contrato. Fugindo assim da implementação do service, e dependendo somente de interfaces.
+
+#### Depency Inversion
+Todos as classes do repositorio que dependem de outras classes recebem estas em seus construtores afim de aplicar o principio de inversão
+
+### MongoDB
+A adoção do MongoDB foi pensada para buscar a simplicidade para lidar com os pedidos, tendo em vista que os arquivos .txt de pedidos contem produtos de mesmo ID com preços diferentes, podendo ser interpretado como um historico de pedidos e produtos
+
+#### Estrutura Pedidos e Usuarios
+
+Toda vez que um pedido é busca, um referencia entre documentos é feito e o usuario pertencente ao pedido tambem é buscado.
+
+Pedido
 ```bash
-$ yarn install
+{
+  "_id": "ObjectId";
+  "user_id" "ObjectId";
+  "order_id": "number";
+  "date": "Date";
+  "total": "string";
+  "products": {
+    "product_id": "number";
+    "value": "string";
+  }[];
+}
+```
+Usuario
+```bash
+{
+  "_id": "ObjectId";
+  "user_id" "number";
+  "name": "string";
+}
 ```
 
-## Running the app
+### Iniciar aplicação
 
+Necessario:
+- docker
+- docker-compose
+
+Iniciar aplicação
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+docker-compose up
 ```
 
-## Test
-
+Testes
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn test:cov
 ```
 
-## Support
+### Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+#### Upload do arquivo .txt
+```http
+POST /orders/file/upload
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+|  | Parametro | Tipo     | Descrição                |
+| :-------- | :-------- | :------- | :------------------------- |
+| `form-data`| `file` | `File` | **Required**. Arquivo .txt |
 
-## License
+#### Exemplo de request:
+```bash
+  curl -X POST \
+  -F "file=@caminho/do/seu/arquivo.txt" \
+  http://localhost:3000/orders/file/upload
 
-Nest is [MIT licensed](LICENSE).
+```
+
+#### Exemplo de retorno: 
+```bash
+{
+    "message": "File uploaded successfully"
+}
+```
+#### Exceptions
+| HTTP Code | Mensagem     | Descrição                       |
+| :-------- | :------- | :-------------------------------- |
+| `400`      | `Bad Request` | Only .txt files are allowed |
+| `400`      | `Bad Request` | Empty file |
+
+
+#### Listar pedidos
+```http
+GET /orders?order_id=&start_date=&end_date=
+```
+
+|  | Parametro | Tipo     | Descrição                |
+| :-------- | :-------- | :------- | :------------------------- |
+| `Query params`| `number` | `order_id` | **Opcional** |
+| `Query params`| `string` | `start_date` | **Opcional** 'yyyy-mm-dd' |
+| `Query params`| `string` | `end_date` | **Opcional** 'yyyy-mm-dd' |
+
+#### Exemplo de request:
+```bash
+  curl -X GET \
+  http://localhost:3000/orders?start_date=2021-10-18&end_date=2021-10-18&order_id=73
+
+```
+
+#### Exemplo de retorno: 
+```bash
+[
+    {
+        "user_id": 7,
+        "name": "Magdalena Kub",
+        "orders": [
+            {
+                "order_id": 73,
+                "date": "2021-10-18",
+                "total": "1740.13",
+                "products": [
+                    {
+                        "product_id": 2,
+                        "value": "423.07"
+                    },
+                    {
+                        "product_id": 0,
+                        "value": "1317.06"
+                    }
+                ]
+            }
+        ]
+    }
+]
+```
+#### Exceptions
+| HTTP Code | Mensagem     | Descrição                       |
+| :-------- | :------- | :-------------------------------- |
+| `400`      | `Bad Request` | Only .txt files are allowed |
+| `400`      | `Bad Request` | Empty file |
